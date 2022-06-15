@@ -13,47 +13,48 @@ const holidays = [
     { date: "11/2/2022", name: "Finados" },
     { date: "11/15/2022", name: "Proclamação da República" },
     { date: "12/25/2022", name: "Natal" }
-  ];
+];
 
-    const app = express();
-    app.use(cors());
+const app = express();
+app.use(cors());
 
-    app.get('/holidays', (req, res) => {
-        res.send(holidays);
-    });
+app.get('/holidays', (req, res) => {
+    res.send(holidays);
+});
 
-    app.get('/is-today-holiday', (req, res) => {
-        res.send(isHoliday());
-    });
+app.get('/is-today-holiday', (req, res) => {
+    res.send(isHoliday());
+});
 
-    app.get('/holidays/:month', (req, res) => {
-        const mes = req.params.month;
-        res.send(holidaysOfMonth(mes));
-    });
+app.get('/holidays/:month', (req, res) => {
+    const mes = req.params.month;
+    res.send(holidaysOfMonth(mes));
+});
 
-    function holidaysOfMonth(mes){
-        const holidaysMonth = [];
-        for(let i=0; i<holidays.length; i++){
-            let newDate = new Date(holidays[i].date);
-            if(newDate.getMonth() + 1 === parseInt(mes)){
-                holidaysMonth.push(holidays[i]);
-            }
-        }
-        if(holidaysMonth.length === 0){
-            return `Não tem feriados no mês ${mes}! :(`;
-        }
-        return holidaysMonth;
-    }
-
-    function isHoliday(){
-        const hoje = new Date();
-        for(let i=0; i<holidays.length; i++){
-            if(holidays[i].date === hoje.toLocaleDateString()){
-                return `Sim, hoje é ${holidays[i].name}`;
-            } else {
-                return `Não, hoje não é feriado`;
-            }
+function holidaysOfMonth(mes) {
+    const holidaysMonth = [];
+    for (let i = 0; i < holidays.length; i++) {
+        let newDate = new Date(holidays[i].date);
+        if (newDate.getMonth() + 1 === parseInt(mes)) {
+            holidaysMonth.push(holidays[i]);
         }
     }
+    if (holidaysMonth.length === 0) {
+        return `Não tem feriados no mês ${mes}! :(`;
+    }
+    return holidaysMonth;
+}
 
-    app.listen(5000);
+function isHoliday() {
+    const hoje = new Date().toLocaleDateString();
+
+    const feriado = holidays.find(d => d.date === hoje);
+
+    if (feriado) {
+        return `Sim, hoje é ${feriado.name}`;
+    } else {
+        return `Não, hoje não é feriado`;
+    }
+}
+
+app.listen(5000);
